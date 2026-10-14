@@ -251,3 +251,5 @@
 {"logTime": "1014/001837", "level": "INFO", "message": "Preference changed: name=fsd.retention_policy_last_version, new_value=155, source=unknown"}
 {"logTime": "1014/001846", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}
 {"logTime": "1014/001846", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}
+{"logTime": "1014/015135", "level": "INFO", "message": "Preference changed: name=profile.content_settings.exceptions.trackers_data, new_value=[object], source=unknown"}
+{"logTime": "1014/015145", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}

@@ -1,0 +1,9 @@
+package com.mysite.sbb;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface QuestionRepository extends JpaRepository<Question, Integer> {
+	// save(): 데이터를 테이블에 저장
+	// delete(): 데이터를 테이블에서 삭제
+	// findById(): 테이블에서 특정 id 데이터 조회
+}
