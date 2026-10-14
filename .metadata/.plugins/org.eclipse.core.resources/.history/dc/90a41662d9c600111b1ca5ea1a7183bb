@@ -1,0 +1,17 @@
+spring.application.name=sbb
+
+server.port=8070
+
+# DATABASE
+# H2 콘솔에 접속할 것인지 설정
+spring.h2.console.enabled=true
+# H2 콘솔로 접속하기 위한 경로
+spring.h2.console.path=/h2-console
+# 데이터베이스에 접속하기 위한 경로
+spring.datasource.url=jdbc:h2:~/local
+# 데이터베이스에 접속할 때 사용하는 드라이버 클래스명
+spring.datasource.driverClassName=org.h2.Driver
+# 데이터베이스의 사용자 이름
+spring.datasource.username=sa
+# 데이터베이스의 비밀번호
+spring.datasource.password=
