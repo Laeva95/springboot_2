@@ -253,3 +253,16 @@
 {"logTime": "1014/001846", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}
 {"logTime": "1014/015135", "level": "INFO", "message": "Preference changed: name=profile.content_settings.exceptions.trackers_data, new_value=[object], source=unknown"}
 {"logTime": "1014/015145", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}
+{"logTime": "1014/053632", "level": "INFO", "message": "Preference changed: name=gaia_cookie.periodic_report_time_2, new_value=\"13436429792061012\", source=unknown"}
+{"logTime": "1014/053632", "level": "INFO", "message": "Preference changed: name=muid.last_sync, new_value=\"13436429792092401\", source=unknown"}
+{"logTime": "1014/053632", "level": "INFO", "message": "Preference changed: name=commerce_daily_metrics_last_update_time, new_value=\"13436429792092629\", source=unknown"}
+{"logTime": "1014/053632", "level": "INFO", "message": "Preference changed: name=bookmark.storage_computation_last_update, new_value=\"13436429792092709\", source=unknown"}
+{"logTime": "1014/053632", "level": "INFO", "message": "Preference changed: name=muid.values_seen, new_value=[object], source=unknown"}
+{"logTime": "1014/053642", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}
+{"logTime": "1014/054251", "level": "INFO", "message": "Preference changed: name=account_tracker_service_last_update, new_value=\"13436430171855110\", source=unknown"}
+{"logTime": "1014/054301", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}
+{"logTime": "1014/064329", "level": "INFO", "message": "Preference changed: name=language_dwell_time_average, new_value=[object], source=unknown"}
+{"logTime": "1014/064329", "level": "INFO", "message": "Preference changed: name=language_usage_count, new_value=[object], source=unknown"}
+{"logTime": "1014/064329", "level": "INFO", "message": "Preference changed: name=language_model_counters, new_value=[object], source=unknown"}
+{"logTime": "1014/064339", "level": "INFO", "message": "PrefStore write completed: store=4, success=true"}
+{"logTime": "1014/065302", "level": "INFO", "message": "Preference changed: name=language_model_counters, new_value=[object], source=unknown"}
