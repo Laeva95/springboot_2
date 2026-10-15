@@ -1,12 +1,15 @@
 package com.mysite.sbb.question;
 
+import java.net.http.HttpRequest;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class QuestionController {
 		return "question_list";			
 	}
 	
+	// 질문글 상세 조회
 	@GetMapping("/detail/{id}")
 	public String detail(Model model, @PathVariable("id") Integer id) {
 		Question question = this.questionService.getQuestion(id);
@@ -37,5 +41,21 @@ public class QuestionController {
         model.addAttribute("question", question);
         
 		return "question_detail";
+	}
+	
+	// 질문글 생성 폼 요청
+	@GetMapping("/create")
+	public String questionCreate() {
+		
+		return "question_form";
+	}
+	
+	// 질문글 생성 요청
+	@PostMapping("/create")
+	public String questionCreate(@RequestParam(value="subject") String subject, @RequestParam(value="content") String content) {
+		
+		this.questionService.create(subject, content);
+		
+		return "redirect:/question/list";
 	}
 }

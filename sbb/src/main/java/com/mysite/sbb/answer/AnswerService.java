@@ -17,7 +17,7 @@ public class AnswerService {
     	// 새 답변 엔티티 생성
         Answer answer = new Answer();
         
-        // 답변 엔티티 내용 입력
+        // 답변 엔티티 내용, 작성 시간, 부모 질문글 저장
         answer.setContent(content);
         answer.setCreateDate(LocalDateTime.now());
         answer.setQuestion(question);
