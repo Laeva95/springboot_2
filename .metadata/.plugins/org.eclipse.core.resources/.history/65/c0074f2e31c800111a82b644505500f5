@@ -1,0 +1,14 @@
+package com.mysite.sbb.question;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class QuestionController {
+	@GetMapping("/question/list")    // 처리할 URL 매핑
+	@ResponseBody                    // 결과 값을 브라우저에 출력
+	public String list() {           // 처리할 명령 내용
+		return "question list";
+	}
+}

@@ -1,0 +1,24 @@
+package com.mysite.sbb.question;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+public class QuestionController {
+	private final QuestionRepository questionRepository;
+	
+	@GetMapping("/question/list")    // 처리할 URL GET 요청 매핑
+	// @ResponseBody                    // 결과 값을 브라우저에 출력
+	public String list(Model model) {   // Model: 브라우저로 응답할 데이터를 보관하는 메모리
+		List<Question> questionList = this.questionRepository.findAll();
+		model.addAttribute("questionList", questionList);
+		return "question_list";
+	}
+}

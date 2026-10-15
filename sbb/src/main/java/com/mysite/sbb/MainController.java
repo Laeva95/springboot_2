@@ -14,4 +14,11 @@ public class MainController {
     public String index() {
         return "안녕하세요 sbb에 오신 것을 환영합니다.";
     }
+    
+    // 요청 URL 매핑
+    @GetMapping("/")
+    public String root() {
+    	// -> /question/list 주소로 재요청
+    	return "redirect:/question/list";
+    }
 }
