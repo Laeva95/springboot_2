@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/common.css}" />
+    <style>
+        a.btn { float:right; margin-top: -37px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>학생목록</h1>
+    <a href="create" class="btn">학생 등록</a>
+    <table class="list">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>학번</th>
+                <th>이름</th>
+                <th>학과</th>
+                <th>전화</th>
+                <th>성별</th>
+                <th>이메일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="st : ${ students }">
+                <td th:text="${ st.id }"></td>
+                <td>
+                    <a th:text="${ st.studentNo }" th:href="@{ edit(id=${ st.id }) }"></a>
+                </td>
+                <td th:text="${ st.name }"></td>
+                <td th:text="${ st.department.name }"></td>
+                <td th:text="${ st.phone }"></td>
+                <td th:text="${ st.sex }"></td>
+                <td th:text="${ st.email }"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

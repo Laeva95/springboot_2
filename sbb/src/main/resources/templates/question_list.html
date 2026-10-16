@@ -14,7 +14,7 @@
 					questionList - Model 객체에 저장한 key 값
 					question - each 태그 아래에서 사용할 리스트의 각 요소			
 				-->
-		        <tr th:each="question, loop : ${questionList}">
+		        <tr th:each="question, loop : ${paging}">
 					<td th:text="${question.id}"></td>
 					<td>
 					    <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
@@ -23,6 +23,37 @@
 		        </tr>
 		    </tbody>
 		</table>
+		<!-- 페이징처리 시작 -->
+		<div th:if="${!paging.isEmpty()}">
+		    <ul class="pagination justify-content-center">
+				<!-- th:classappend="${!paging.hasPrevious} ? 'disable' -> 조건식이 참인 경우 class 속성에 값 추가"-->
+		        <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+		            <a class="page-link"
+		                th:href="@{|?page=${paging.number-1}|}">
+		                <span>이전</span>
+		            </a>
+		        </li>
+				<!-- 
+					0부터 전체 페이지 -1 까지 배열을 만들어서 반복함
+					page 번호가 paging.number와 같다면 class 속성에 값 추가
+					현재 페이지 -5부터 현재 페이지 +5 까지의 범위 페이지만 표시
+				-->
+		        <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+					th:if="${page >= paging.number-5 and page <= paging.number+5}"
+		            th:classappend="${page == paging.number} ? 'active'" 
+		            class="page-item">
+					<!-- 페이지 번호를 눌렀을 때 해당 페이지로 GET 요청 -->
+		            <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+		        </li>
+								<!-- th:classappend="${!paging.hasNext} ? 'disable' -> 조건식이 참인 경우 class 속성에 값 추가"-->
+		        <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+		            <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+		                <span>다음</span>
+		            </a>
+		        </li>
+		    </ul>
+		</div>
+		<!-- 페이징처리 끝 -->
 		<a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 	</div>
 </html>
