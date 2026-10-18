@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/common.css}" />
+    <style>
+        h3 { margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>학과별 학생목록</h1>
+    <div th:each="dp : ${ departments }">
+        <h3 th:text="${ dp.name }"></h3>
+        <table class="list">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>학번</th>
+                    <th>이름</th>
+                    <th>학과</th>
+                    <th>전화</th>
+                    <th>성별</th>
+                    <th>이메일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="st : ${ dp.students }">
+                    <td th:text="${ st.id }"></td>                     <!-- 🔥 기존 th:text 대신에 edit으로 연결되는 링크 태그를 추가했습니다 -->
+                    <td th:text="${ st.studentNo}"></td>
+                    <td th:text="${ st.name }"></td>
+                    <td th:text="${ st.department.name }"></td>
+                    <td th:text="${ st.phone }"></td>
+                    <td th:text="${ st.sex }"></td>
+                    <td th:text="${ st.email }"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
