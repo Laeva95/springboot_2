@@ -21,7 +21,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
                       WHERE g.lecture.professor.id = ?1 OR g.lecture.professor.name = ?2)
         """)
     List<Student> findByProfessorIdOrProfessorName(int id, String name);
-    List<Student> findBySugangsLectureProfessorIdSugangsLectureProfessorName(int id, String name);
+    List<Student> findBySugangs_Lecture_Professor_IdAndSugangs_Lecture_Professor_Name(int id, String name);
     @Query("""
         SELECT s
         FROM Student s
