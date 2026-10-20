@@ -1,8 +1,10 @@
 package com.mysite.sbb.answer;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.mysite.sbb.question.Question;
+import com.mysite.sbb.user.SiteUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,11 +26,23 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
     // columnDefinetion = "TEXT": 길이 제한이 거의 없는 문자열
     @Column(columnDefinition = "TEXT")
     private String content;
+    
     private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
+    
     // ManyToOne: N:1, 다대일 관계를 말하며 질문 1개당 여러 답변이 달릴 수 있음
     @ManyToOne(fetch = FetchType.EAGER)	// 즉시 로딩하여 답변을 읽을 때 내부의 질문도 같이 읽음
     private Question question;  
+    
+    // 답변을 작성한 회원 정보를 담는 변수
+    @ManyToOne
+    private SiteUser author;
+    
+    // 해당 답변을 추천한 사람들 Set. 중복 저장 안됨, 순서 없음
+    @ManyToMany
+    Set<SiteUser> voter;
 }
