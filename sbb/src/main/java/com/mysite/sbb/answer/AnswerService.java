@@ -17,7 +17,7 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
 
     // 질문에 대한 답변 생성 요청
-    public void create(Question question, String content, SiteUser author) {
+    public Answer create(Question question, String content, SiteUser author) {
     	// 새 답변 엔티티 생성
         Answer answer = new Answer();
         
@@ -26,8 +26,11 @@ public class AnswerService {
         answer.setCreateDate(LocalDateTime.now());
         answer.setQuestion(question);
         answer.setAuthor(author);
+        
         // 리포지터리에 저장 요청
         this.answerRepository.save(answer);
+        
+        return answer;
     }
     
     // id를 통해 db에서 답변 글을 조회하고 반환하는 메소드

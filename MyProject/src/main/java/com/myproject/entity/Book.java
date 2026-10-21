@@ -42,5 +42,10 @@ public class Book {
         return status;
     }
     
-
+    // Book 엔티티의 내용을 수정할 수 있는 메소드
+    public void update(String title, String author, String status) {
+        this.title = title;
+        this.author = author;
+        this.status = status;
+    }
 }

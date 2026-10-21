@@ -49,9 +49,10 @@ public class AnswerController {
         }
         
         // 답변 저장 요청
-        answerService.create(question, answerForm.getContent(), siteUser);
+        Answer answer = answerService.create(question, answerForm.getContent(), siteUser);
         
-        return String.format("redirect:/question/detail/%s", id);
+        return String.format("redirect:/question/detail/%s#answer_%s", 
+                answer.getQuestion().getId(), answer.getId());
     }
     
     // 답변 수정 페이지 요청
@@ -95,7 +96,8 @@ public class AnswerController {
         this.answerService.modify(answer, answerForm.getContent());
         
         // 수정한 답변글이 존재하는 질문 글 상세 페이지 요청
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", 
+                answer.getQuestion().getId(), answer.getId());
     }
     
     // 답변 글을 삭제 요청하는 메소드
@@ -131,6 +133,7 @@ public class AnswerController {
         this.answerService.vote(answer, siteUser);
         
         // 해당 답변글이 위치하던 질문 글 상세 보기 화면으로 리다이렉트
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", 
+                answer.getQuestion().getId(), answer.getId());
     }
 }

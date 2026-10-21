@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>책 목록</title>
+</head>
+<body>
+    <h1>나의 독서 기록</h1>
+
+    <p th:if="${message}" th:text="${message}"></p>
+
+    <p>
+        <a th:href="@{/books/new}">새 책 등록하기</a>
+    </p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>책 제목</th>
+                <th>저자</th>
+                <th>독서 상태</th>
+				<th>관리</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.id}"></td>
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.status}"></td>
+				<td>
+				    <a th:href="@{/books/{id}/edit(id=${book.id})}">
+				        수정
+				    </a>
+				</td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(books)}">
+                <td colspan="4">등록된 책이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -37,10 +37,15 @@ public class QuestionController {
 	@GetMapping("/list")    
 	// 결과 값을 브라우저에 출력
 	// @RequestParam(defaultValue=""): 값을 전달 받지 않았을 때 기본 값	
-	public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {   // Model: 브라우저로 응답할 데이터를 보관하는 메모리
-		Page<Question> paging = this.questionService.getList(page);
+	public String list(Model model, 
+					@RequestParam(value = "page", defaultValue = "0") int page,
+					@RequestParam(value = "kw", defaultValue = "") String kw) {   // Model: 브라우저로 응답할 데이터를 보관하는 메모리
 		
+		Page<Question> paging = this.questionService.getList(page, kw);
+		
+		// 현재 페이지와 검색어를 Model 객체에 담아서 view 페이지에 전달
 		model.addAttribute("paging", paging);
+		model.addAttribute("kw", kw);
 		
 		return "question_list";			
 	}

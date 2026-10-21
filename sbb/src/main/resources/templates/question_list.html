@@ -1,5 +1,16 @@
 <html layout:decorate="~{layout}"> 							<!--layout.html 파일을 상속-->
 	<div layout:fragment="content" class="container my-3">	<!--layout.html의 fragment="content" 영역에 삽입-->
+		<div class="row my-3">
+		    <div class="col-6">
+		        <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+		    </div>
+		    <div class="col-6">
+		        <div class="input-group">
+		            <input type="text" id="search_kw" class="form-control" th:value="${kw}">
+		            <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+		        </div>
+		    </div>
+		</div>
 		<table class="table">
 		    <thead class="table-dark">
 		        <tr class="text-center">
@@ -33,8 +44,7 @@
 		    <ul class="pagination justify-content-center">
 				<!-- th:classappend="${!paging.hasPrevious} ? 'disable' -> 조건식이 참인 경우 class 속성에 값 추가"-->
 		        <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-		            <a class="page-link"
-		                th:href="@{|?page=${paging.number-1}|}">
+		            <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number-1}">
 		                <span>이전</span>
 		            </a>
 		        </li>
@@ -48,17 +58,42 @@
 		            th:classappend="${page == paging.number} ? 'active'" 
 		            class="page-item">
 					<!-- 페이지 번호를 눌렀을 때 해당 페이지로 GET 요청 -->
-		            <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+		            <a th:text="${page}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
 		        </li>
 								<!-- th:classappend="${!paging.hasNext} ? 'disable' -> 조건식이 참인 경우 class 속성에 값 추가"-->
 		        <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-		            <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+		            <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number+1}">
 		                <span>다음</span>
 		            </a>
 		        </li>
 		    </ul>
 		</div>
 		<!-- 페이징처리 끝 -->
-		<a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+		<form th:action="@{/question/list}" method="get" id="searchForm">
+		    <input type="hidden" id="kw" name="kw" th:value="${kw}">
+		    <input type="hidden" id="page" name="page" th:value="${paging.number}">
+		</form>
 	</div>
+	<script layout:fragment="script" type='text/javascript'>
+		/* 
+			page-link 클래스에 해당하는 모든 요소에 클릭 이벤트 추가
+			이전, 다음, 페이지번호
+		*/
+	const page_elements = document.getElementsByClassName("page-link");
+	Array.from(page_elements).forEach(function(element) {
+	    element.addEventListener('click', function() {
+			/* page의 value를 data 속성 값에서 가져옴 */
+	        document.getElementById('page').value = this.dataset.page;
+			/* 검색 버튼의 요청을 실행 */
+	        document.getElementById('searchForm').submit();
+	    });
+	});
+	const btn_search = document.getElementById("btn_search");
+	btn_search.addEventListener('click', function() {
+		/* 검색어 값 kw를 히든 input 태그의 값으로 설정 */
+	    document.getElementById('kw').value = document.getElementById('search_kw').value;
+	    document.getElementById('page').value = 0;  // 검색버튼을 클릭할 경우 0페이지부터 조회한다.
+	    document.getElementById('searchForm').submit();
+	});
+	</script>
 </html>

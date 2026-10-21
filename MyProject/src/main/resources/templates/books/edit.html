@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>책 정보 수정</title>
+</head>
+<body>
+    <h1>책 정보 수정</h1>
+
+    <form th:action="@{/books/{id}/edit(id=${book.id})}"
+          method="post">
+
+        <div>
+            <label for="title">책 제목</label>
+            <input type="text"
+                   id="title"
+                   name="title"
+                   th:value="${book.title}"
+                   required>
+        </div>
+
+        <div>
+            <label for="author">저자</label>
+            <input type="text"
+                   id="author"
+                   name="author"
+                   th:value="${book.author}"
+                   required>
+        </div>
+
+        <div>
+            <label for="status">독서 상태</label>
+            <select id="status" name="status" required>
+                <option value="PLANNED"
+                        th:selected="${book.status == 'PLANNED'}">
+                    읽을 예정
+                </option>
+                <option value="READING"
+                        th:selected="${book.status == 'READING'}">
+                    읽는 중
+                </option>
+                <option value="COMPLETED"
+                        th:selected="${book.status == 'COMPLETED'}">
+                    완독
+                </option>
+            </select>
+        </div>
+
+        <button type="submit">수정 완료</button>
+    </form>
+
+    <p>
+        <a th:href="@{/books}">취소하고 목록으로 돌아가기</a>
+    </p>
+</body>
+</html>
