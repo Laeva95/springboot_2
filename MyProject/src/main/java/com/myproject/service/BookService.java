@@ -51,4 +51,15 @@ public class BookService {
 	    // 가져온 책의 제목, 저자, 상태를 변경
 	    book.update(title, author, status);
 	}
+	
+	// 책 하나의 데이터를 삭제하는 메소드
+	@Transactional
+	public void deleteBook(Long id) {
+		// id를 통해 책 한권을 검색해서 가져옴
+	    Book book = bookRepository.findById(id).orElseThrow(() ->
+	                    new NoSuchElementException("책을 찾을 수 없습니다. ID: " + id));
+
+	    // 가져온 책 삭제
+	    bookRepository.delete(book);
+	}
 }

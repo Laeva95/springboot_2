@@ -72,8 +72,20 @@ public class BookController {
 
         bookService.updateBook(id, title, author, status);
 
-        redirectAttributes.addFlashAttribute(
-                "message", "책 정보가 수정되었습니다.");
+        redirectAttributes.addFlashAttribute("message", "책 정보가 수정되었습니다.");
+
+        return "redirect:/books";
+    }
+    
+    // 책 데이터 삭제 요청
+    @PostMapping("/books/{id}/delete")
+    public String deleteBook(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+
+        bookService.deleteBook(id);
+
+        redirectAttributes.addFlashAttribute("message", "책이 삭제되었습니다.");
 
         return "redirect:/books";
     }
