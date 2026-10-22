@@ -7,27 +7,48 @@
 </head>
 <body>
     <h1>새로운 책 등록</h1>
+	<!-- th:object: 아래 태그 내부에서 사용할 객체 선언 -->
+	<!-- th:field: 현재 사용하는 객체의 변수 사용 -->
+    <form th:action="@{/books}" th:object="${bookForm}" method="post">
 
-    <form th:action="@{/books}" method="post">
+		<div>
+		    <label for="title">책 제목</label>
+		    <input type="text"
+		           id="title"
+		           th:field="*{title}">
 
-        <div>
-            <label for="title">책 제목</label>
-            <input type="text" id="title" name="title" required>
-        </div>
+		    <p th:if="${#fields.hasErrors('title')}"
+		       th:errors="*{title}">
+		        제목 오류 메시지
+		    </p>
+		</div>
 
-        <div>
-            <label for="author">저자</label>
-            <input type="text" id="author" name="author" required>
-        </div>
+		<div>
+		    <label for="author">저자</label>
+		    <input type="text"
+		           id="author"
+		           th:field="*{author}">
 
-        <div>
-            <label for="status">독서 상태</label>
-            <select id="status" name="status" required>
-                <option value="PLANNED">읽을 예정</option>
-                <option value="READING">읽는 중</option>
-                <option value="COMPLETED">완독</option>
-            </select>
-        </div>
+		    <p th:if="${#fields.hasErrors('author')}"
+		       th:errors="*{author}">
+		        저자 오류 메시지
+		    </p>
+		</div>
+
+		<div>
+		    <label for="status">독서 상태</label>
+		    <select id="status" th:field="*{status}">
+		        <option value="">선택해 주세요</option>
+		        <option value="PLANNED">읽을 예정</option>
+		        <option value="READING">읽는 중</option>
+		        <option value="COMPLETED">완독</option>
+		    </select>
+
+		    <p th:if="${#fields.hasErrors('status')}"
+		       th:errors="*{status}">
+		        독서 상태 오류 메시지
+		    </p>
+		</div>
 
         <button type="submit">등록하기</button>
     </form>

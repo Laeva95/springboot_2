@@ -2,14 +2,19 @@ package com.myproject.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myproject.entity.Book;
+import com.myproject.entity.BookForm;
 import com.myproject.service.BookService;
+
+import jakarta.validation.Valid;
 
 // 스프링 컨트롤러
 @Controller
@@ -30,19 +35,32 @@ public class BookController {
 
     // 2. 책 등록 폼 페이지
     @GetMapping("/books/new")
-    public String bookForm() {
+    public String bookForm(Model model) {
+    	model.addAttribute("bookForm", new BookForm());
         return "books/form";
     }
 
     // 3. 책 등록 처리
     @PostMapping("/books")
     public String createBook(
-            @RequestParam String title,
-            @RequestParam String author,
-            @RequestParam String status,
+    		// @Valid: 객체에 선언한 검증 규칙을 실행하여 유효성 검사
+    		// @ModelAttribute: 요청으로 전달된 데이터를 매개변수로 받음
+    		// BindingResult: 검증 결과를 담는 객체
+    		@Valid @ModelAttribute("bookForm") BookForm form,
+            BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
 
-        bookService.saveBook(title, author, status);
+    	// 입력값 검증에 실패했다면 등록 화면으로 돌아간다.
+        if (bindingResult.hasErrors()) {
+            return "books/form";
+        }
+
+        // 검증을 통과한 경우에만 DB에 저장한다.
+        bookService.saveBook(
+            form.getTitle(),
+            form.getAuthor(),
+            form.getStatus()
+        );
 
         redirectAttributes.addFlashAttribute(
                 "message", "책이 등록되었습니다.");
