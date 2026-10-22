@@ -1,5 +1,6 @@
 package com.mysite.sbb.question;
 
+import lombok.extern.slf4j.Slf4j;
 import java.security.Principal;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import com.mysite.sbb.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/question")
@@ -41,6 +43,7 @@ public class QuestionController {
 					@RequestParam(value = "page", defaultValue = "0") int page,
 					@RequestParam(value = "kw", defaultValue = "") String kw) {   // Model: 브라우저로 응답할 데이터를 보관하는 메모리
 		
+		log.info("page:{}, kw:{}", page, kw);
 		Page<Question> paging = this.questionService.getList(page, kw);
 		
 		// 현재 페이지와 검색어를 Model 객체에 담아서 view 페이지에 전달

@@ -73,8 +73,18 @@ public class BookController {
     public String editBookForm(
             @PathVariable Long id, Model model) {
 
+    	// id 값을 통해 db에서 책 엔티티를 가져옴
         Book book = bookService.findBook(id);
-        model.addAttribute("book", book);
+        
+        // BookForm 객체를 생성하여 엔티티의 정보 입력
+        BookForm form = new BookForm();
+        form.setTitle(book.getTitle());
+        form.setAuthor(book.getAuthor());
+        form.setStatus(book.getStatus());
+        
+        // 모델 객체를 통해 BookForm 객체 전달
+        model.addAttribute("bookForm", form);
+        model.addAttribute("bookId", id);
 
         return "books/edit";
     }
@@ -83,12 +93,19 @@ public class BookController {
     @PostMapping("/books/{id}/edit")
     public String updateBook(
             @PathVariable Long id,
-            @RequestParam String title,
-            @RequestParam String author,
-            @RequestParam String status,
+            @Valid @ModelAttribute("bookForm") BookForm form,
+            BindingResult bindingResult,
+            Model model,
             RedirectAttributes redirectAttributes) {
 
-        bookService.updateBook(id, title, author, status);
+    	// 검증에 실패하면 수정 화면을 다시 보여 준다.
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("bookId", id);
+            return "books/edit";
+        }
+        
+        // 검증을 통과한 경우에만 책 정보를 수정한다.
+        bookService.updateBook(id, form.getTitle(), form.getAuthor(), form.getStatus());
 
         redirectAttributes.addFlashAttribute("message", "책 정보가 수정되었습니다.");
 
