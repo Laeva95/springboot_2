@@ -31,6 +31,12 @@ public class BookService {
 		return bookRepository.findAll();
 	}
 	
+	// status를 통해 특정 책들을 검색하는 메소드
+	@Transactional(readOnly = true)
+	public List<Book> findByStatus(String status) {
+	    return bookRepository.findByStatus(status);
+	}
+	
 	// id를 통해 특정 책 하나를 검색하는 메소드
 	@Transactional(readOnly = true)
 	public Book findBook(Long id) {

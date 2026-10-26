@@ -1,5 +1,7 @@
 package com.myproject.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,11 +29,32 @@ public class BookController {
     }
 
     // 1. 책 목록 페이지
-    @GetMapping("/books")
-    public String bookList(Model model) {
-        model.addAttribute("books", bookService.findAll());
-        return "books/list";
+	@GetMapping("/books")
+	public String bookList(
+		// @RequestParam: URL의 쿼리 파라미터를 메소드 매개변수로 전달
+        @RequestParam(defaultValue = "ALL") String status,
+        Model model) {
+
+    List<Book> books;
+
+    if ("ALL".equals(status)) {
+        books = bookService.findAll();
+    } else if (
+            "PLANNED".equals(status)
+            || "READING".equals(status)
+            || "COMPLETED".equals(status)) {
+
+        books = bookService.findByStatus(status);
+    } else {
+        throw new IllegalArgumentException("올바르지 않은 독서 상태입니다.");
     }
+
+    model.addAttribute("books", books);
+    model.addAttribute("selectedStatus", status);
+
+    return "books/list";
+}
+
 
     // 2. 책 등록 폼 페이지
     @GetMapping("/books/new")

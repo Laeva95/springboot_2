@@ -13,7 +13,26 @@
     <p>
         <a th:href="@{/books/new}">새 책 등록하기</a>
     </p>
-
+	<!-- 책의 독서 상태에 따라 다른 status 값을 컨트롤러의 매개 변수로 전달 -->
+	<div>
+		<!-- 값을 설정하지 않으면 'ALL' 값으로 설정 -->
+	    <a th:href="@{/books}">전체</a>
+	    |
+	    <a th:href="@{/books(status='PLANNED')}">읽을 예정</a>
+	    |
+	    <a th:href="@{/books(status='READING')}">읽는 중</a>
+	    |
+	    <a th:href="@{/books(status='COMPLETED')}">완독</a>
+	</div>
+	<p>
+	    현재 필터:
+	    <span th:switch="${selectedStatus}">
+	        <span th:case="'ALL'">전체</span>
+	        <span th:case="'PLANNED'">읽을 예정</span>
+	        <span th:case="'READING'">읽는 중</span>
+	        <span th:case="'COMPLETED'">완독</span>
+	    </span>
+	</p>
     <table border="1">
         <thead>
             <tr>
