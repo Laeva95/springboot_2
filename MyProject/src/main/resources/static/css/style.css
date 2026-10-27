@@ -1,0 +1,61 @@
+
+/* 목록 필터 */
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.filter-link {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 20px;
+    color: #374151;
+    text-decoration: none;
+    background-color: #ffffff;
+}
+
+.filter-link:hover {
+    background-color: #f3f4f6;
+}
+
+.filter-link.active {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* 독서 상태 배지 */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.status-planned {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-reading {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-completed {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+/* 빈 목록 안내 */
+.empty-message {
+    padding: 32px 12px;
+    text-align: center;
+    color: #6b7280;
+}
