@@ -69,15 +69,9 @@ public class BookService {
 	    bookRepository.delete(book);
 	}
 	
-	// 매개변수 문자열이 포함된 title을 검색해서 조회하는 메소드
+	// 책의 상태, 검색어를 통해 책을 검색하는 메소드
 	@Transactional(readOnly = true)
-	public List<Book> searchByTitle(String keyword) {
-	    return bookRepository.findByTitleContainingIgnoreCase(keyword);
-	}
-
-	// 매개변수 문자열이 포함된 author을 검색해서 조회하는 메소드
-	@Transactional(readOnly = true)
-	public List<Book> searchByAuthor(String keyword) {
-	    return bookRepository.findByAuthorContainingIgnoreCase(keyword);
+	public List<Book> searchBooks(String status, String keyword) {
+	    return bookRepository.searchBooks(status, keyword);
 	}
 }

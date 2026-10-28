@@ -33,26 +33,28 @@ public class BookController {
 	public String bookList(
 		// @RequestParam: URL의 쿼리 파라미터를 메소드 매개변수로 전달
         @RequestParam(defaultValue = "ALL") String status,
+        @RequestParam(defaultValue = "") String keyword,
         Model model) {
 
-    List<Book> books;
+		// status의 상태 확인
+		if (!"ALL".equals(status)
+	            && !"PLANNED".equals(status)
+	            && !"READING".equals(status)
+	            && !"COMPLETED".equals(status)) {
+			throw new IllegalArgumentException("올바르지 않은 독서 상태입니다.");
+	    }
 
-    if ("ALL".equals(status)) {
-        books = bookService.findAll();
-    } else if (
-            "PLANNED".equals(status)
-            || "READING".equals(status)
-            || "COMPLETED".equals(status)) {
+		// 검색어의 공백 제거
+	    keyword = keyword.trim();
 
-        books = bookService.findByStatus(status);
-    } else {
-        throw new IllegalArgumentException("올바르지 않은 독서 상태입니다.");
-    }
+	    // 상태, 검색어를 통해 책 검색
+	    List<Book> books = bookService.searchBooks(status, keyword);
 
-    model.addAttribute("books", books);
-    model.addAttribute("selectedStatus", status);
+	    model.addAttribute("books", books);
+	    model.addAttribute("selectedStatus", status);
+	    model.addAttribute("keyword", keyword);
 
-    return "books/list";
+	    return "books/list";
 }
 
 
