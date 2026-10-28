@@ -114,5 +114,31 @@
             </tr>
         </tbody>
     </table>
+	<!-- 페이징 영역 -->
+	<div class="pagination" th:if="${totalPages > 0}">
+
+	    <!-- 이전 페이지 -->
+		<!-- 검색 결과가 0건일 경우 페이지 번호 생성하지 않음 -->
+	    <a th:if="${currentPage > 0}"
+	       th:href="@{/books(page=${currentPage - 1}, status=${selectedStatus}, keyword=${keyword})}">
+	        이전
+	    </a>
+
+	    <!-- 페이지 번호 -->
+		<!-- ${#numbers.sequence(0, totalPages - 1)}-->
+	    <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+	       th:href="@{/books(page=${pageNum}, status=${selectedStatus}, keyword=${keyword})}"
+	       th:text="${pageNum + 1}"
+	       th:classappend="${pageNum == currentPage} ? ' active' : ''">
+	        1
+	    </a>
+
+	    <!-- 다음 페이지 -->
+	    <a th:if="${currentPage + 1 < totalPages}"
+	       th:href="@{/books(page=${currentPage + 1}, status=${selectedStatus}, keyword=${keyword})}">
+	        다음
+	    </a>
+
+	</div>
 </body>
 </html>

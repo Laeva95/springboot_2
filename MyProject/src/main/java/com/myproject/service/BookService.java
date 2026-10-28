@@ -3,6 +3,8 @@ package com.myproject.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,7 +73,7 @@ public class BookService {
 	
 	// 책의 상태, 검색어를 통해 책을 검색하는 메소드
 	@Transactional(readOnly = true)
-	public List<Book> searchBooks(String status, String keyword) {
-	    return bookRepository.searchBooks(status, keyword);
+	public Page<Book> searchBooks(String status, String keyword, Pageable pageable) {
+	    return bookRepository.searchBooks(status, keyword, pageable);
 	}
 }

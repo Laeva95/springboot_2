@@ -90,3 +90,34 @@
     color: #4b5563;
     text-decoration: none;
 }
+
+/* 페이지 이동 영역 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 24px 0;
+}
+
+/* 페이지 번호 및 이동 링크 */
+.pagination a {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+}
+
+/* 현재 페이지 */
+.pagination a.active {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+/* 마우스를 올렸을 때 */
+.pagination a:hover {
+    background-color: #eee;
+}

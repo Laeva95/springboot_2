@@ -16,6 +16,11 @@ import com.myproject.entity.Book;
 import com.myproject.entity.BookForm;
 import com.myproject.service.BookService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import jakarta.validation.Valid;
 
 // 스프링 컨트롤러
@@ -34,6 +39,7 @@ public class BookController {
 		// @RequestParam: URL의 쿼리 파라미터를 메소드 매개변수로 전달
         @RequestParam(defaultValue = "ALL") String status,
         @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "0") int page,
         Model model) {
 
 		// status의 상태 확인
@@ -46,11 +52,32 @@ public class BookController {
 
 		// 검색어의 공백 제거
 	    keyword = keyword.trim();
+	    
+	    // 페이지 번호 검증: 음수 페이지 방지
+	    if(page < 0) {
+	    	page = 0;
+	    }
+	    
+	    // 현재 페이지, 한 페이지에 10권씩, ID 내림차순으로 조회
+	    Pageable pageable = PageRequest.of(
+	    						page, 
+	    						10, 
+	    						Sort.by(Sort.Direction.DESC, "id")
+	    						);
 
 	    // 상태, 검색어를 통해 책 검색
-	    List<Book> books = bookService.searchBooks(status, keyword);
+	    Page<Book> bookPage = bookService.searchBooks(status, keyword, pageable);
 
-	    model.addAttribute("books", books);
+	    // 현재 페이지 책 목록
+	    model.addAttribute("books", bookPage.getContent());
+	    
+	    // 페이지 이동에 필요한 정보
+	    // 현재 페이지, 전체 페이지, 전체 데이터 개수
+	    model.addAttribute("currentPage", bookPage.getNumber());
+	    model.addAttribute("totalPages", bookPage.getTotalPages());
+	    model.addAttribute("totalItems", bookPage.getTotalElements());
+	    
+	    // 검색어 및 필터 상태 유지
 	    model.addAttribute("selectedStatus", status);
 	    model.addAttribute("keyword", keyword);
 
