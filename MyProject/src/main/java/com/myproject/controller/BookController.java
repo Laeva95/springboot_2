@@ -67,6 +67,21 @@ public class BookController {
 
 	    // 상태, 검색어를 통해 책 검색
 	    Page<Book> bookPage = bookService.searchBooks(status, keyword, pageable);
+	    
+	    // 현재 페이지가 속한 페이지 그룹의 첫 번째 번호
+	    // 1의 자리수를 버려서 10단위로 표시
+	    int startPage = (bookPage.getNumber() / 10) * 10;
+
+	    // 현재 페이지 그룹의 마지막 번호
+	    // 시작 페이지부터 + 9까지 표시할지, 최대 페이지에 제한되는만큼 표시할지 결정
+	    int endPage = Math.min(
+	            startPage + 9,
+	            bookPage.getTotalPages() - 1
+	    );
+
+	    // 시작 페이지와 종료 페이지를 모델 객체에 저장
+	    model.addAttribute("startPage", startPage);
+	    model.addAttribute("endPage", endPage);
 
 	    // 현재 페이지 책 목록
 	    model.addAttribute("books", bookPage.getContent());
@@ -111,7 +126,9 @@ public class BookController {
         bookService.saveBook(
             form.getTitle(),
             form.getAuthor(),
-            form.getStatus()
+            form.getStatus(),
+            form.getStartDate(),
+            form.getCompletedDate()
         );
 
         redirectAttributes.addFlashAttribute(
@@ -133,6 +150,8 @@ public class BookController {
         form.setTitle(book.getTitle());
         form.setAuthor(book.getAuthor());
         form.setStatus(book.getStatus());
+        form.setStartDate(book.getStartDate());
+        form.setCompletedDate(book.getCompletedDate());
         
         // 모델 객체를 통해 BookForm 객체 전달
         model.addAttribute("bookForm", form);
@@ -157,7 +176,13 @@ public class BookController {
         }
         
         // 검증을 통과한 경우에만 책 정보를 수정한다.
-        bookService.updateBook(id, form.getTitle(), form.getAuthor(), form.getStatus());
+        bookService.updateBook(
+        		id, 
+        		form.getTitle(), 
+        		form.getAuthor(), 
+        		form.getStatus(),
+                form.getStartDate(),
+                form.getCompletedDate());
 
         redirectAttributes.addFlashAttribute("message", "책 정보가 수정되었습니다.");
 

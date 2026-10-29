@@ -49,7 +49,23 @@
 		        독서 상태 오류 메시지
 		    </p>
 		</div>
+		<!-- 독서 시작일 -->
+		<div class="form-group">
+		    <label for="startDate">독서 시작일</label>
+		    <input type="date"
+		           id="startDate"
+		           name="startDate"
+		           th:field="*{startDate}">
+		</div>
 
+		<!-- 완독일 -->
+		<div class="form-group">
+		    <label for="completedDate">완독일</label>
+		    <input type="date"
+		           id="completedDate"
+		           name="completedDate"
+		           th:field="*{completedDate}">
+		</div>
         <button type="submit">등록하기</button>
     </form>
 

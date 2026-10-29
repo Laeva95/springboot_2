@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>책 목록</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <h1>나의 독서 기록</h1>
@@ -64,17 +64,19 @@
     <table border="1">
         <thead>
             <tr>
-                <th>번호</th>
+                <th>ID</th>
                 <th>책 제목</th>
                 <th>저자</th>
                 <th>독서 상태</th>
+				<th>시작일</th>
+				<th>완독일</th>
 				<th>관리</th>
             </tr>
         </thead>
 
         <tbody>
 			<tr th:if="${#lists.isEmpty(books)}">
-			    <td colspan="5" class="empty-message">
+			    <td colspan="7" class="empty-message">
 			        등록된 책이 없습니다.
 			    </td>
 			</tr>
@@ -99,16 +101,29 @@
 				        <span th:case="'COMPLETED'">완독</span>
 				    </span>
 				</td>
+				<!-- 독서 시작일 -->
+				<td th:text="${book.startDate != null ? book.startDate : '-'}">
+				    -
+				</td>
+
+				<!-- 완독일 -->
+				<td th:text="${book.completedDate != null ? book.completedDate : '-'}">
+				    -
+				</td>
 				<td>
-				    <a th:href="@{/books/{id}/edit(id=${book.id})}">
-				        수정
-				    </a>
+					<a th:href="@{/books/{id}/edit(id=${book.id})}"
+					   class="action-button edit-button">
+					    수정
+					</a>
+
 					<form th:action="@{/books/{id}/delete(id=${book.id})}"
 					      method="post"
-					      style="display: inline;"
+					      class="delete-form"
 					      onsubmit="return confirm('정말 삭제하시겠습니까?');">
-
-					    <button type="submit">삭제</button>
+					    <button type="submit"
+					            class="action-button delete-button">
+					        삭제
+					    </button>
 					</form>
 				</td>
             </tr>
@@ -116,17 +131,22 @@
     </table>
 	<!-- 페이징 영역 -->
 	<div class="pagination" th:if="${totalPages > 0}">
+		<!-- 이전 10페이지 그룹 -->
+		<a th:if="${startPage > 0}"
+		   th:href="@{/books(page=${startPage - 1}, status=${selectedStatus}, keyword=${keyword})}">
+		    ◀◀
+		</a>
 
 	    <!-- 이전 페이지 -->
 		<!-- 검색 결과가 0건일 경우 페이지 번호 생성하지 않음 -->
 	    <a th:if="${currentPage > 0}"
 	       th:href="@{/books(page=${currentPage - 1}, status=${selectedStatus}, keyword=${keyword})}">
-	        이전
+	        ◀
 	    </a>
 
 	    <!-- 페이지 번호 -->
 		<!-- ${#numbers.sequence(0, totalPages - 1)}-->
-	    <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+	    <a th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
 	       th:href="@{/books(page=${pageNum}, status=${selectedStatus}, keyword=${keyword})}"
 	       th:text="${pageNum + 1}"
 	       th:classappend="${pageNum == currentPage} ? ' active' : ''">
@@ -136,9 +156,14 @@
 	    <!-- 다음 페이지 -->
 	    <a th:if="${currentPage + 1 < totalPages}"
 	       th:href="@{/books(page=${currentPage + 1}, status=${selectedStatus}, keyword=${keyword})}">
-	        다음
+	        ▶
 	    </a>
 
+		<!-- 다음 10페이지 그룹 -->
+		<a th:if="${endPage + 1 < totalPages}"
+		   th:href="@{/books(page=${endPage + 1}, status=${selectedStatus}, keyword=${keyword})}">
+		    ▶▶
+		</a>
 	</div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.myproject.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,8 +22,13 @@ public class BookService {
 	
 	// 책 한권을 DB에 저장 요청 처리
 	@Transactional
-	public Book saveBook(String title, String author, String status) {
-		Book book = new Book(title, author, status);
+	public Book saveBook(
+			String title, 
+			String author, 
+			String status,
+			LocalDate startDate,
+			LocalDate completedDate) {
+		Book book = new Book(title, author, status, startDate, completedDate);
 		
 		return bookRepository.save(book);
 	}
@@ -50,14 +56,19 @@ public class BookService {
 	// 책의 데이터를 수정하는 메소드
 	@Transactional
 	public void updateBook(
-	        Long id, String title, String author, String status) {
+	        Long id, 
+	        String title, 
+	        String author, 
+	        String status,
+	        LocalDate startDate,
+	        LocalDate completedDate) {
 
 		// id를 통해 db에서 책 한권을 검색해서 가져옴
 	    Book book = bookRepository.findById(id).orElseThrow(() ->
 	                    new NoSuchElementException("책을 찾을 수 없습니다. ID: " + id));
 
 	    // 가져온 책의 제목, 저자, 상태를 변경
-	    book.update(title, author, status);
+	    book.update(title, author, status, startDate, completedDate);
 	}
 	
 	// 책 하나의 데이터를 삭제하는 메소드

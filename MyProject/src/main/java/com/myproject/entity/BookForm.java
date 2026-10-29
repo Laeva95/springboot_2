@@ -1,6 +1,8 @@
 package com.myproject.entity;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import jakarta.validation.constraints.Pattern;
 
 public class BookForm {
@@ -18,7 +20,10 @@ public class BookForm {
         message = "올바른 독서 상태를 선택해 주세요."
     )
     private String status;
+    private LocalDate startDate;
+    private LocalDate completedDate;
 
+    // getter, setter
     public String getTitle() {
         return title;
     }
@@ -41,5 +46,31 @@ public class BookForm {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(LocalDate completedDate) {
+        this.completedDate = completedDate;
+    }
+    
+    // 완료일이 시작일보다 빠를 수 없음
+    @AssertTrue(message = "완독일은 독서 시작일보다 빠를 수 없습니다.")
+    public boolean isDateRangeValid() {
+        if (startDate == null || completedDate == null) {
+            return true;
+        }
+
+        return !completedDate.isBefore(startDate);
     }
 }
