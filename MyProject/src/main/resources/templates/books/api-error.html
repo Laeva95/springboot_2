@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>도서 정보를 불러올 수 없습니다</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <main>
+        <h1>도서 정보를 불러올 수 없습니다.</h1>
+
+        <p th:text="${errorMessage}">
+            외부 도서 API 요청에 실패했습니다.
+        </p>
+
+        <a th:href="@{/books/search}">도서 검색으로 돌아가기</a>
+        <a th:href="@{/books}">내 독서 목록으로 돌아가기</a>
+    </main>
+</body>
+</html>

@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YES24 도서 검색</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main class="api-book-page">
+    <h1>도서 검색</h1>
+
+    <p>
+        YES24 Open API를 이용해 도서 정보와 표지를 검색합니다.
+    </p>
+
+    <form th:action="@{/books/search}" method="get">
+        <input
+            type="search"
+            name="query"
+            placeholder="책 제목 또는 저자 입력"
+            th:value="${query}"
+            required>
+
+        <button type="submit">검색</button>
+    </form>
+
+    <p th:if="${errorMessage != null}"
+       th:text="${errorMessage}">
+    </p>
+
+    <p th:if="${!#strings.isEmpty(query) and #lists.isEmpty(books)}">
+        검색 결과가 없습니다.
+    </p>
+
+    <section class="api-book-list">
+        <article class="api-book-card"
+                 th:each="book : ${books}">
+
+            <a th:href="@{/books/api/{itemId}(itemId=${book.itemId})}">
+                <img
+                    th:if="${book.cover != null and !#strings.isEmpty(book.cover)}"
+                    th:src="${book.cover}"
+                    th:alt="${book.title + ' 표지'}">
+
+                <h2 th:text="${book.title}">책 제목</h2>
+            </a>
+
+            <p>
+                저자:
+                <span th:text="${book.author}">저자</span>
+            </p>
+
+            <p>
+                출판사:
+                <span th:text="${book.publisher}">출판사</span>
+            </p>
+
+			<p class="book-description"
+			   th:if="${book.contentDetail != null
+			           and !#strings.isEmpty(book.contentDetail.bookIntroduction)}"
+			   th:text="${book.contentDetail.bookIntroduction}">
+			    책 소개
+			</p>
+
+			<p class="book-description no-description"
+			   th:if="${book.contentDetail == null
+			           or #strings.isEmpty(book.contentDetail.bookIntroduction)}">
+			    저장된 줄거리가 없습니다.
+			</p>
+
+            <a th:if="${book.link != null}"
+               th:href="${book.link}"
+               target="_blank"
+               rel="noopener noreferrer">
+                YES24 상품 페이지
+            </a>
+        </article>
+    </section>
+
+    <p>
+        도서 정보 제공: YES24
+    </p>
+
+    <a th:href="@{/books}">내 독서 목록으로 돌아가기</a>
+</main>
+
+</body>
+</html>

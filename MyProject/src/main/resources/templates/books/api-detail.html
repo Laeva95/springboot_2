@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 상세 정보</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main class="api-book-detail">
+    <a th:href="@{/books/search}">← 도서 검색으로 돌아가기</a>
+
+    <article>
+        <img
+            th:if="${book.cover != null and !#strings.isEmpty(book.cover)}"
+            th:src="${book.cover}"
+            th:alt="${book.title + ' 표지'}">
+
+        <h1 th:text="${book.title}">책 제목</h1>
+
+        <p>
+            저자:
+            <span th:text="${book.author}">저자</span>
+        </p>
+
+        <p>
+            출판사:
+            <span th:text="${book.publisher}">출판사</span>
+        </p>
+
+        <p>
+            ISBN:
+            <span th:text="${book.isbn13}">ISBN</span>
+        </p>
+
+        <p>
+            출판일:
+            <span th:text="${book.publishDate}">출판일</span>
+        </p>
+
+        <section>
+            <h2>책 소개</h2>
+
+            <p th:if="${book.contentDetail != null
+                        and book.contentDetail.bookIntroduction != null}"
+               th:text="${book.contentDetail.bookIntroduction}">
+                책 소개 내용
+            </p>
+
+            <p th:if="${book.contentDetail == null
+                        or book.contentDetail.bookIntroduction == null}">
+                제공되는 책 소개 정보가 없습니다.
+            </p>
+        </section>
+
+        <a th:if="${book.link != null}"
+           th:href="${book.link}"
+           target="_blank"
+           rel="noopener noreferrer">
+            YES24에서 도서 정보 확인하기
+        </a>
+    </article>
+
+    <p>도서 정보 제공: YES24</p>
+</main>
+
+</body>
+</html>
