@@ -1,5 +1,6 @@
 package com.myproject.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +14,12 @@ import com.myproject.entity.Book;
 public interface BookRepository extends JpaRepository<Book, Long> {
 	// status를 통해 검색
 	List<Book> findByStatus(String status);
+	
+	// YES24 도서 ID로 등록 여부 확인
+	boolean existsByYes24ItemId(Long yes24ItemId);
+	
+	// 
+	List<Book> findAllByYes24ItemIdIn(Collection<Long> yes24ItemIds);
 	
 	// 제목, 검색어, 페이지를 통해 검색
 	@Query(value = """
@@ -37,4 +44,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             @Param("status") String status,
             @Param("keyword") String keyword,
             Pageable pageable);
+	
+	
 }

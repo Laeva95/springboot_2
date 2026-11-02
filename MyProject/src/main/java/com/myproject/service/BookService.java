@@ -3,12 +3,14 @@ package com.myproject.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.myproject.dto.Yes24BookResponse;
 import com.myproject.entity.Book;
 import com.myproject.repository.BookRepository;
 
@@ -86,5 +88,59 @@ public class BookService {
 	@Transactional(readOnly = true)
 	public Page<Book> searchBooks(String status, String keyword, Pageable pageable) {
 	    return bookRepository.searchBooks(status, keyword, pageable);
+	}
+	
+	// YES24 api id를 이용해 책 등록 유무 확인
+	@Transactional
+	public Book saveBookFromYes24(
+	        Yes24BookResponse.BookItem item) {
+
+	    // 1. 예외처리
+	    if (item == null || item.itemId() == null) {
+	        throw new IllegalArgumentException(
+	                "유효한 YES24 도서 정보가 없습니다."
+	        );
+	    }
+	    
+	    if (bookRepository.existsByYes24ItemId(item.itemId())) {
+	        throw new IllegalArgumentException(
+	                "이미 내 서재에 등록된 책입니다."
+	        );
+	    }
+	    
+
+	    // 2. 새 Book 엔티티 생성
+	    Book book = new Book(
+	            item.title(),
+	            item.author(),
+	            "PLANNED",
+	            item.publisher(),
+	            item.isbn13(),
+	            item.cover(),
+	            item.itemId()
+	    );
+
+	    // 3. DB에 저장
+	    return bookRepository.save(book);
+	}
+	
+	// YES24 검색 결과 중 이미 등록된 도서 ID 목록 반환
+	@Transactional(readOnly = true)
+	public Set<Long> getRegisteredYes24ItemIds(
+	        List<Yes24BookResponse.BookItem> items) {
+
+	    List<Long> itemIds = items.stream()
+	            .map(Yes24BookResponse.BookItem::itemId)
+	            .filter(java.util.Objects::nonNull)
+	            .toList();
+
+	    if (itemIds.isEmpty()) {
+	        return Set.of();
+	    }
+
+	    return bookRepository.findAllByYes24ItemIdIn(itemIds)
+	            .stream()
+	            .map(Book::getYes24ItemId)
+	            .collect(java.util.stream.Collectors.toSet());
 	}
 }

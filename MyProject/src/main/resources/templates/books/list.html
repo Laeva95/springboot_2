@@ -7,6 +7,11 @@
 	<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+	<!-- 목록에 책 추가 성공 -->
+	<p th:if="${successMessage != null}"
+	   th:text="${successMessage}">
+	</p>
+	
     <h1>나의 독서 기록</h1>
 	<a th:href="@{/books/search}">
 	    YES24에서 도서 검색하기

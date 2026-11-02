@@ -10,6 +10,11 @@
 <body>
 
 <main class="api-book-detail">
+	<!-- 목록에 책 추가 실패 -->
+	<p th:if="${errorMessage != null}"
+	   th:text="${errorMessage}">
+	</p>
+	
     <a th:href="@{/books/search}">← 도서 검색으로 돌아가기</a>
 
     <article>

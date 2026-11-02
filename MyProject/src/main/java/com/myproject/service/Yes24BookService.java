@@ -37,7 +37,7 @@ public class Yes24BookService {
     }
 
     // 도서 검색
-    public List<BookItem> searchBooks(String query) {
+    public Yes24BookResponse.Data searchBooks(String query, int page) {
         if (apiKey == null || apiKey.isBlank()) {
             throw new IllegalStateException(
                     "YES24 API Key가 설정되지 않았습니다.");
@@ -47,7 +47,7 @@ public class Yes24BookService {
                 .fromUriString(baseUrl)
                 .path("/goods/itemList")
                 .queryParam("query", query)
-                .queryParam("page", 1)
+                .queryParam("page", page)
                 .queryParam("pageSize", 10)
                 .queryParam("detail", "Y")
                 .build()
@@ -56,10 +56,12 @@ public class Yes24BookService {
 
         Yes24BookResponse response = request(uri);
 
-        return response.data() == null
-                || response.data().items() == null
-                ? List.of()
-                : response.data().items();
+        if (response.data() == null) {
+            throw new IllegalStateException(
+                    "YES24 검색 응답에 데이터가 없습니다.");
+        }
+
+        return response.data();
     }
 
     // YES24 상품 번호로 도서 상세 조회

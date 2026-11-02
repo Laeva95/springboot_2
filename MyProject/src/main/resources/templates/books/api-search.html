@@ -77,9 +77,57 @@
                rel="noopener noreferrer">
                 YES24 상품 페이지
             </a>
+			
+			<!-- 이미 등록된 책 -->
+			<p th:if="${registeredItemIds.contains(book.itemId)}">
+			    이미 등록됨
+			</p>
+
+			<!-- 아직 등록하지 않은 책 -->
+			<form th:unless="${registeredItemIds.contains(book.itemId)}"
+			      th:action="@{/books/api/{itemId}/add(itemId=${book.itemId})}"
+			      method="post">
+			    <button type="submit">내 서재에 추가</button>
+			</form>
         </article>
     </section>
+	<!-- 10페이지 단위 페이지네이션 -->
+	<nav class="pagination"
+	     th:if="${totalPages > 1}"
+	     aria-label="도서 검색 페이지">
 
+	    <!-- 이전 10페이지 그룹 -->
+	    <a th:if="${startPage > 1}"
+	       th:href="@{/books/search(query=${query}, page=${startPage - 10})}">
+	        ◀◀
+	    </a>
+
+	    <!-- 이전 페이지 -->
+	    <a th:if="${currentPage > 1}"
+	       th:href="@{/books/search(query=${query}, page=${currentPage - 1})}">
+	        ◀
+	    </a>
+
+	    <!-- 현재 페이지 그룹의 페이지 번호 -->
+	    <a th:each="p : ${#numbers.sequence(startPage, endPage)}"
+	       th:href="@{/books/search(query=${query}, page=${p})}"
+	       th:text="${p}"
+	       th:classappend="${p == currentPage} ? ' active' : ''">
+	    </a>
+
+	    <!-- 다음 페이지 -->
+	    <a th:if="${currentPage < totalPages}"
+	       th:href="@{/books/search(query=${query}, page=${currentPage + 1})}">
+	        ▶
+	    </a>
+
+	    <!-- 다음 10페이지 그룹 -->
+	    <a th:if="${endPage < totalPages}"
+	       th:href="@{/books/search(query=${query}, page=${endPage + 1})}">
+	        ▶▶
+	    </a>
+
+	</nav>
     <p>
         도서 정보 제공: YES24
     </p>

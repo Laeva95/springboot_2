@@ -18,7 +18,10 @@ public record Yes24BookResponse(
 {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Data(
-            List<BookItem> items
+            List<BookItem> items,
+            Integer currentPage,
+            Integer pageSize,
+            Integer totalCount
     ) 
     
     {
