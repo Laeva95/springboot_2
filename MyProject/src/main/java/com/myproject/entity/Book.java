@@ -3,6 +3,9 @@ package com.myproject.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +18,14 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    // 도서 소유자
+    // ManyToOne: 여러 Book이 하나의 User에 종속됨
+    // JoinColumn: 외래키 설정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    
     private String title;
     private String author;
     private String status;
@@ -27,6 +37,8 @@ public class Book {
     private String publisher;
     private String isbn13;
     private String cover;
+    
+
 
     // YES24에서 부여한 도서 식별자
     @Column(unique = true)
@@ -39,6 +51,52 @@ public class Book {
     // 기존 생성자: 기존 코드와의 호환성 유지
     public Book(String title, String author, String status) {
         this(title, author, status, null, null);
+    }
+    
+ // 사용자 정보를 포함하는 생성자
+    public Book(
+            String title,
+            String author,
+            String status,
+            User user) {
+
+        this.title = title;
+        this.author = author;
+        this.status = status;
+        this.user = user;
+    }
+    
+    public Book(
+            String title,
+            String author,
+            String status,
+            LocalDate startDate,
+            LocalDate completedDate,
+            User user) {
+
+        this(title, author, status, user);
+
+        this.startDate = startDate;
+        this.completedDate = completedDate;
+    }
+    
+ // YES24 도서 정보와 사용자 정보를 포함하는 생성자
+    public Book(
+            String title,
+            String author,
+            String status,
+            String publisher,
+            String isbn13,
+            String cover,
+            Long yes24ItemId,
+            User user) {
+
+        this(title, author, status, user);
+
+        this.publisher = publisher;
+        this.isbn13 = isbn13;
+        this.cover = cover;
+        this.yes24ItemId = yes24ItemId;
     }
 
     // 날짜까지 설정하는 기존 생성자
@@ -77,6 +135,13 @@ public class Book {
     // Getter
     public Long getId() {
         return id;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTitle() {
