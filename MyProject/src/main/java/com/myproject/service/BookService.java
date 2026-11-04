@@ -9,7 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.myproject.entity.User;
+import com.myproject.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.myproject.dto.Yes24BookResponse;
 import com.myproject.entity.Book;
 import com.myproject.repository.BookRepository;
@@ -17,12 +20,15 @@ import com.myproject.repository.BookRepository;
 @Service
 public class BookService {
 	private final BookRepository bookRepository;
+	private final UserRepository userRepository;
 	
-	public BookService(BookRepository bookRepository) {
+	public BookService(BookRepository bookRepository,
+			UserRepository userRepository) {
 		this.bookRepository = bookRepository;
+		this.userRepository = userRepository;
 	}
 	
-	// 책 한권을 DB에 저장 요청 처리
+	// 책 한권을 로그인한 유저 DB에 저장 요청 처리
 	@Transactional
 	public Book saveBook(
 			String title, 
@@ -30,29 +36,55 @@ public class BookService {
 			String status,
 			LocalDate startDate,
 			LocalDate completedDate) {
-		Book book = new Book(title, author, status, startDate, completedDate);
+		
+		User user = getCurrentUser();
+		
+		Book book = new Book(title, author, status, startDate, completedDate, user);
 		
 		return bookRepository.save(book);
 	}
 	
-	// db의 모든 책 조회
+	// 현재 로그인한 User 엔티티 조회하기
+	private User getCurrentUser() {
+	    Authentication authentication =
+	            SecurityContextHolder.getContext().getAuthentication();
+
+	    String username = authentication.getName();
+
+	    return userRepository.findByUsername(username)
+	            .orElseThrow(() ->
+	                    new IllegalStateException("로그인 사용자를 찾을 수 없습니다."));
+	}
+	
+	// 로그인한 유저의 모든 책 조회
 	@Transactional(readOnly = true)
 	public List<Book> findAll(){
-		return bookRepository.findAll();
+		User user = getCurrentUser();
+		return bookRepository.findByUserId(user.getId());
 	}
 	
 	// status를 통해 특정 책들을 검색하는 메소드
 	@Transactional(readOnly = true)
 	public List<Book> findByStatus(String status) {
-	    return bookRepository.findByStatus(status);
+	    User user = getCurrentUser();
+
+	    return bookRepository.findByUserIdAndStatus(
+	            user.getId(),
+	            status
+	    );
 	}
 	
 	// id를 통해 특정 책 하나를 검색하는 메소드
 	@Transactional(readOnly = true)
 	public Book findBook(Long id) {
-		// id를 통해 db에서 책 한권을 검색해서 가져옴
-	    return bookRepository.findById(id).orElseThrow(() ->
-	                    new NoSuchElementException("책을 찾을 수 없습니다. ID: " + id));
+		// id와 로그인한 계정 정보를 통해 db에서 책 한권을 검색해서 가져옴
+		User user = getCurrentUser();
+
+	    return bookRepository.findByIdAndUserId(id, user.getId())
+	            .orElseThrow(() ->
+	                    new NoSuchElementException(
+	                            "책을 찾을 수 없습니다. ID: " + id
+	                    ));
 	}
 
 	// 책의 데이터를 수정하는 메소드
@@ -66,28 +98,46 @@ public class BookService {
 	        LocalDate completedDate) {
 
 		// id를 통해 db에서 책 한권을 검색해서 가져옴
-	    Book book = bookRepository.findById(id).orElseThrow(() ->
-	                    new NoSuchElementException("책을 찾을 수 없습니다. ID: " + id));
+		User user = getCurrentUser();
 
-	    // 가져온 책의 제목, 저자, 상태를 변경
+	    Book book = bookRepository.findByIdAndUserId(id, user.getId())
+	            .orElseThrow(() ->
+	                    new NoSuchElementException(
+	                            "책을 찾을 수 없습니다. ID: " + id
+	                    ));
+
 	    book.update(title, author, status, startDate, completedDate);
 	}
 	
 	// 책 하나의 데이터를 삭제하는 메소드
 	@Transactional
 	public void deleteBook(Long id) {
-		// id를 통해 책 한권을 검색해서 가져옴
-	    Book book = bookRepository.findById(id).orElseThrow(() ->
-	                    new NoSuchElementException("책을 찾을 수 없습니다. ID: " + id));
+	    User user = getCurrentUser();
 
-	    // 가져온 책 삭제
+	    Book book = bookRepository.findByIdAndUserId(id, user.getId())
+	            .orElseThrow(() ->
+	                    new NoSuchElementException(
+	                            "책을 찾을 수 없습니다. ID: " + id
+	                    ));
+
 	    bookRepository.delete(book);
 	}
 	
 	// 책의 상태, 검색어를 통해 책을 검색하는 메소드
 	@Transactional(readOnly = true)
-	public Page<Book> searchBooks(String status, String keyword, Pageable pageable) {
-	    return bookRepository.searchBooks(status, keyword, pageable);
+	public Page<Book> searchBooks(
+	        String status,
+	        String keyword,
+	        Pageable pageable) {
+
+	    User user = getCurrentUser();
+
+	    return bookRepository.searchBooks(
+	            user.getId(),
+	            status,
+	            keyword,
+	            pageable
+	    );
 	}
 	
 	// YES24 api id를 이용해 책 등록 유무 확인
