@@ -132,7 +132,7 @@ public class BookController {
         );
 
         redirectAttributes.addFlashAttribute(
-                "message", "책이 등록되었습니다.");
+                "successMessage", "책이 등록되었습니다.");
 
         return "redirect:/books";
     }
@@ -184,7 +184,7 @@ public class BookController {
                 form.getStartDate(),
                 form.getCompletedDate());
 
-        redirectAttributes.addFlashAttribute("message", "책 정보가 수정되었습니다.");
+        redirectAttributes.addFlashAttribute("successMessage", "책 정보가 수정되었습니다.");
 
         return "redirect:/books";
     }
@@ -197,7 +197,7 @@ public class BookController {
 
         bookService.deleteBook(id);
 
-        redirectAttributes.addFlashAttribute("message", "책이 삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("successMessage", "책이 삭제되었습니다.");
 
         return "redirect:/books";
     }

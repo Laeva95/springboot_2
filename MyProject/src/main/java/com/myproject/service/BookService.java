@@ -152,14 +152,17 @@ public class BookService {
 	        );
 	    }
 	    
-	    if (bookRepository.existsByYes24ItemId(item.itemId())) {
+	    // 현재 로그인한 사용자
+	    User user = getCurrentUser();
+
+	    // 같은 사용자가 이미 등록한 도서인지 확인 (다른 사용자와는 무관)
+	    if (bookRepository.existsByUserIdAndYes24ItemId(user.getId(), item.itemId())) {
 	        throw new IllegalArgumentException(
 	                "이미 내 서재에 등록된 책입니다."
 	        );
 	    }
-	    
 
-	    // 2. 새 Book 엔티티 생성
+	    // 2. 새 Book 엔티티 생성 (소유자 정보 포함)
 	    Book book = new Book(
 	            item.title(),
 	            item.author(),
@@ -167,7 +170,8 @@ public class BookService {
 	            item.publisher(),
 	            item.isbn13(),
 	            item.cover(),
-	            item.itemId()
+	            item.itemId(),
+	            user
 	    );
 
 	    // 3. DB에 저장
@@ -188,7 +192,10 @@ public class BookService {
 	        return Set.of();
 	    }
 
-	    return bookRepository.findAllByYes24ItemIdIn(itemIds)
+	    User user = getCurrentUser();
+
+	    // 로그인한 사용자의 서재에 등록된 도서만 조회
+	    return bookRepository.findAllByUserIdAndYes24ItemIdIn(user.getId(), itemIds)
 	            .stream()
 	            .map(Book::getYes24ItemId)
 	            .collect(java.util.stream.Collectors.toSet());
